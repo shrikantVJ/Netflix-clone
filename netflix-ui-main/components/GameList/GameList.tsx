@@ -7,7 +7,7 @@ import { Movie, MovieRow } from '@/types/movie';
 const GameItem = ({ item, router }: { item: Movie; router: any }) => (
     <Pressable
         onPress={() => router.push({
-            pathname: '/movie/[id]',
+            pathname: '/play/[id]',
             params: { id: item.id }
         })}
         style={styles.contentItem}

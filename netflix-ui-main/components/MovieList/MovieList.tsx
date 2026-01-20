@@ -29,10 +29,10 @@ const MovieItem = ({ item, router, index, isTop10 }: {
     isTop10: boolean;
 }) => (
     <Pressable
-        // onPress={() => router.push({
-        //     pathname: '/movie/[id]',
-        //     params: { id: item.id }
-        // })}
+        onPress={() => router.push({
+            pathname: '/watch/[id]',
+            params: { id: item.id }
+        })}
         style={[
             styles.contentItem,
             isTop10 && styles.top10Item

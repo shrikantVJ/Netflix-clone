@@ -16,62 +16,38 @@ interface Props {
 }
 
 export function TabScreenWrapper({ children, isActive, slideDirection }: Props) {
-    const navigation = useNavigation();
     const [hasInitialized, setHasInitialized] = useState(false);
 
-    // Only animate if it's a tab navigation
-    var shouldAnimate = false;
-    const state = navigation.getState();
-    const currentRoute = state.routes[state.index].name;
-    const previousRoute = state.index > 0 ? state.routes[state.index - 1].name : null;
-    // console.log('Current route:', currentRoute);
-    // console.log('Previous route:', previousRoute);
-    const possibleRoutes = ['new', 'index', '(profile)/profile', null];
-    if (possibleRoutes.includes(currentRoute) && possibleRoutes.includes(previousRoute)) {
-        shouldAnimate = true;
-    }
+    // Simplified logic: Always render the wrapper to prevent re-mounting
 
-
-    // return <>{children}</>
-
-
-    //This is no longer needed because of the expo-router 4, so return just children for upcoming react navigation 
-
-    if (!shouldAnimate) {
-        return <>{children}</>;
-    }
-
+    // Initial fetch of state
     const translateX = useSharedValue(isActive ? 0 : (slideDirection === 'left' ? -25 : 25));
     const opacity = useSharedValue(isActive ? 1 : 0);
-    const [isAnimating, setIsAnimating] = useState(false);
+    // const [isAnimating, setIsAnimating] = useState(false); // Removed state to prevent extra renders
 
     useEffect(() => {
         // Trigger initial animation
         if (!hasInitialized && isActive) {
-            translateX.value = slideDirection === 'left' ? -25 : 25;
-            opacity.value = 0;
+            translateX.value = 0; // Start at 0 if active initially
+            opacity.value = 1;
             setHasInitialized(true);
+            return;
         }
 
-        setIsAnimating(true);
         if (isActive) {
             translateX.value = withSpring(0, {
                 damping: 25,
                 stiffness: 120,
-                mass: 0.4
-            }, () => {
-                runOnJS(setIsAnimating)(false);
+                mass: 0.5
             });
-            opacity.value = withTiming(1, { duration: 100 });
+            opacity.value = withTiming(1, { duration: 200 }); // Slightly slower for smoothness
         } else {
-            translateX.value = withSpring(slideDirection === 'left' ? -25 : 25, {
+            translateX.value = withSpring(slideDirection === 'left' ? -20 : 20, {
                 damping: 25,
                 stiffness: 120,
-                mass: 0.4
+                mass: 0.5
             });
-            opacity.value = withTiming(0, { duration: 100 }, () => {
-                runOnJS(setIsAnimating)(false);
-            });
+            opacity.value = withTiming(0, { duration: 150 });
         }
     }, [isActive, slideDirection]);
 
@@ -83,6 +59,7 @@ export function TabScreenWrapper({ children, isActive, slideDirection }: Props) 
         opacity: opacity.value,
     }));
 
+    // Always return the same structure
     return (
         <View style={{ flex: 1, backgroundColor: '#000' }}>
             <Animated.View style={[{
@@ -90,7 +67,7 @@ export function TabScreenWrapper({ children, isActive, slideDirection }: Props) 
                 width: '100%',
                 height: '100%',
                 backgroundColor: '#000',
-            }, isAnimating ? animatedStyle : null]}>
+            }, animatedStyle]}>
                 {children}
             </Animated.View>
         </View>
