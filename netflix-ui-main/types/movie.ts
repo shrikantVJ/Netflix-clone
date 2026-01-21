@@ -1,6 +1,8 @@
 export interface Movie {
     id: string;
     imageUrl: string;
+    title?: string;
+    type?: string;
 }
 
 export interface MovieRow {

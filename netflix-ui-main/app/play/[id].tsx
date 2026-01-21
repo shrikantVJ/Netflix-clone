@@ -5,6 +5,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { BlurView } from 'expo-blur';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const { width } = Dimensions.get('window');
 
@@ -12,6 +14,7 @@ export default function PlayScreen() {
     const { id } = useLocalSearchParams();
     const router = useRouter();
     const insets = useSafeAreaInsets();
+    const { colorScheme } = useTheme();
     const [isLaunching, setIsLaunching] = useState(false);
 
     // Dummy game data
@@ -34,23 +37,14 @@ export default function PlayScreen() {
     };
 
     return (
-        <View style={styles.container}>
-            <StatusBar style="light" />
+        <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+            <StatusBar style={colorScheme === 'dark' ? "light" : "dark"} />
 
-            {/* Header */}
-            <View style={[styles.header, { paddingTop: insets.top + 10 }]}>
-                <Pressable onPress={() => router.back()} style={styles.backButton}>
-                    <Ionicons name="arrow-back" size={28} color="#fff" />
-                </Pressable>
-                <View style={{ flex: 1 }} />
-                <Pressable style={styles.iconButton}>
-                    <Ionicons name="search" size={24} color="#fff" />
-                </Pressable>
-            </View>
 
-            <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+
+            <ScrollView style={[styles.content]} showsVerticalScrollIndicator={false}>
                 {/* Game Banner */}
-                <View style={styles.bannerContainer}>
+                <View style={[styles.bannerContainer, { marginTop: insets.top + 60 }]}>
                     <View style={styles.bannerPlaceholder}>
                         <Ionicons name="game-controller" size={80} color="rgba(255,255,255,0.3)" />
                     </View>
@@ -194,6 +188,24 @@ export default function PlayScreen() {
                     </View>
                 </View>
             </ScrollView>
+
+            {/* Header with Glassmorphism - positioned on top */}
+            <BlurView
+                intensity={80}
+                tint={colorScheme === 'dark' ? 'dark' : 'light'}
+                style={[styles.header, {
+                    paddingTop: insets.top,
+                    backgroundColor: colorScheme === 'dark' ? 'rgba(0,0,0,0.3)' : 'rgba(255,255,255,0.3)'
+                }]}
+            >
+                <Pressable onPress={() => router.back()} style={styles.backButton}>
+                    <Ionicons name="arrow-back" size={28} color="#fff" />
+                </Pressable>
+                <View style={{ flex: 1 }} />
+                <Pressable style={styles.iconButton}>
+                    <Ionicons name="search" size={24} color="#fff" />
+                </Pressable>
+            </BlurView>
         </View>
     );
 }
@@ -204,12 +216,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#000',
     },
     header: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 16,
         paddingBottom: 10,
-        backgroundColor: '#000',
+        zIndex: 10,
+        overflow: 'hidden',
     },
     backButton: {
         padding: 4,

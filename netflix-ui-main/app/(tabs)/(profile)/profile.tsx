@@ -1,8 +1,10 @@
 import React, { useRef, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, ScrollView, Text, Image, FlatList } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { useUser } from '@/contexts/UserContext';
 import { usePathname, useRouter } from 'expo-router';
+import { useTheme } from '@/contexts/ThemeContext';
 import { TAB_SCREENS } from '@/app/(tabs)/_layout';
 import { TabScreenWrapper } from '@/components/TabScreenWrapper';
 import { useScrollToTop } from '@react-navigation/native';
@@ -31,6 +33,7 @@ export default function ProfileScreen() {
     const { selectedProfile } = useUser();
     const pathname = usePathname();
     const isActive = pathname === '/profile';
+    const { colorScheme, toggleTheme } = useTheme();
     const router = useRouter();
     const scrollViewRef = useRef(null);
     useScrollToTop(scrollViewRef);
@@ -55,12 +58,12 @@ export default function ProfileScreen() {
 
     const headerAnimatedProps = useAnimatedProps(() => {
         return {
-            intensity: interpolate(
+            intensity: (interpolate(
                 scrollY.value,
                 [0, 90],
                 [0, 85],
                 'clamp'
-            )
+            ) as any)
         };
     });
 
@@ -70,7 +73,7 @@ export default function ProfileScreen() {
                 horizontal
                 data={exampleLikedShowsAndMovies}
                 keyExtractor={item => item.id.toString()}
-                renderItem={useCallback(({ item }) => (
+                renderItem={useCallback(({ item }: { item: { id: number; imageUrl: string } }) => (
                     <View style={styles.likedItemContainer}>
                         <Image
                             source={{ uri: item.imageUrl }}
@@ -91,7 +94,7 @@ export default function ProfileScreen() {
             horizontal
             data={exampleMyList}
             keyExtractor={item => item.id.toString()}
-            renderItem={useCallback(({ item }) => (
+            renderItem={useCallback(({ item }: { item: { id: number; imageUrl: string } }) => (
                 <Image
                     style={styles.myListImage}
                     source={{ uri: item.imageUrl }}
@@ -107,20 +110,28 @@ export default function ProfileScreen() {
 
     return (
         <TabScreenWrapper isActive={isActive} slideDirection={slideDirection}>
-            <View style={styles.container}>
+            <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+                <StatusBar style={colorScheme === 'dark' ? "light" : "dark"} />
                 <AnimatedBlurView
-                    tint="dark"
+                    tint={colorScheme === 'dark' ? "dark" : "light"}
                     style={[styles.headerBlur]}
                     animatedProps={headerAnimatedProps}
                 >
                     <View style={styles.header}>
-                        <Text style={styles.title}>My Netflix</Text>
+                        <Text style={[styles.title, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>My Netflix</Text>
                         <View style={styles.headerRight}>
+                            <TouchableOpacity style={styles.searchButton} onPress={toggleTheme}>
+                                <Ionicons
+                                    name={colorScheme === 'dark' ? "sunny-outline" : "moon-outline"}
+                                    size={28}
+                                    color={colorScheme === 'dark' ? "white" : "black"}
+                                />
+                            </TouchableOpacity>
                             <TouchableOpacity style={styles.searchButton} onPress={() => router.push('/search')}>
-                                <Ionicons name="search" size={28} color="white" />
+                                <Ionicons name="search" size={28} color={colorScheme === 'dark' ? "white" : "black"} />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.menuButton}>
-                                <Ionicons name="menu" size={28} color="white" />
+                                <Ionicons name="menu" size={28} color={colorScheme === 'dark' ? "white" : "black"} />
                             </TouchableOpacity>
                         </View>
                     </View>

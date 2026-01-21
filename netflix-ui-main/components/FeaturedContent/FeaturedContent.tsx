@@ -6,6 +6,8 @@ import Animated from 'react-native-reanimated';
 import { styles } from '@/styles';
 import { FeaturedMovie } from '@/types/movie';
 
+import { useTheme } from '@/contexts/ThemeContext';
+
 interface FeaturedContentProps {
     movie: FeaturedMovie;
     imageStyle: any;
@@ -21,9 +23,14 @@ export function FeaturedContent({
     buttonsStyle,
     topMargin
 }: FeaturedContentProps) {
+    const { colorScheme } = useTheme();
+
     return (
         <View style={[styles.featuredContent, { marginTop: topMargin }]}>
-            <View style={styles.featuredWrapper}>
+            <View style={[styles.featuredWrapper, {
+                borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)',
+                backgroundColor: colorScheme === 'dark' ? '#000' : '#fff'
+            }]}>
 
 
                 <View style={styles.featuredImageContainer}>
@@ -32,7 +39,9 @@ export function FeaturedContent({
                         style={[styles.featuredImage, imageStyle]}
                     />
                     <LinearGradient
-                        colors={['transparent', 'rgba(0,0,0,0.8)']}
+                        colors={colorScheme === 'dark'
+                            ? ['transparent', 'rgba(0,0,0,0.8)']
+                            : ['transparent', 'rgba(255,255,255,0.8)']}
                         style={styles.featuredGradient}
                     />
                     <Animated.Image source={{ uri: movie.logo }} style={styles.featuredLogo} />
@@ -40,7 +49,7 @@ export function FeaturedContent({
 
                 <View style={styles.featuredOverlay}>
                     <Animated.View style={[styles.featuredCategories, categoriesStyle]}>
-                        <Text style={styles.categoriesText}>
+                        <Text style={[styles.categoriesText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>
                             {movie.categories.join(' • ')}
                         </Text>
                     </Animated.View>
@@ -56,11 +65,11 @@ export function FeaturedContent({
 
 
                     <Animated.View style={[styles.featuredButtons, buttonsStyle]}>
-                        <Pressable style={styles.playButton}>
-                            <Ionicons name="play" size={24} color="#000" />
-                            <Text style={styles.playButtonText}>Play</Text>
+                        <Pressable style={[styles.playButton, { backgroundColor: colorScheme === 'dark' ? '#fff' : '#000' }]}>
+                            <Ionicons name="play" size={24} color={colorScheme === 'dark' ? "#000" : "#fff"} />
+                            <Text style={[styles.playButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>Play</Text>
                         </Pressable>
-                        <Pressable style={styles.myListButton}>
+                        <Pressable style={[styles.myListButton, { backgroundColor: colorScheme === 'dark' ? 'rgba(51, 51, 51, 0.9)' : 'rgba(0, 0, 0, 0.7)' }]}>
                             <Ionicons name="add" size={24} color="#fff" />
                             <Text style={styles.myListButtonText}>My List</Text>
                         </Pressable>

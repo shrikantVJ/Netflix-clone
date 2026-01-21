@@ -9,6 +9,7 @@ import { Home } from '@/icons/Home';
 import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
 import { Image as ExpoImage } from 'expo-image';
+import { useTheme } from '@/contexts/ThemeContext';
 
 // Helper component for cross-platform icons
 function TabIcon({ ionIcon, color }: { ionIcon: 'person' | 'home-sharp' | 'play-square'; color: string }) {
@@ -90,6 +91,8 @@ const styles = StyleSheet.create({
 
 export default function TabLayout() {
   const pathname = usePathname();
+  const { colorScheme } = useTheme();
+
   const handleTabPress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
@@ -97,8 +100,8 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#FFFFFF',
-        tabBarInactiveTintColor: '#ffffff3f',
+        tabBarActiveTintColor: colorScheme === 'dark' ? '#FFFFFF' : '#E50914',
+        tabBarInactiveTintColor: colorScheme === 'dark' ? '#ffffff3f' : '#0000003f',
         headerShown: false,
         tabBarStyle: {
           position: 'absolute',
@@ -111,15 +114,15 @@ export default function TabLayout() {
         },
         tabBarBackground: () => (
           <BlurView
-            tint="dark"
-            intensity={99}
+            tint={colorScheme === 'dark' ? 'dark' : 'light'}
+            intensity={95}
             style={styles.blurView}
           />
         ),
         tabBarLabelStyle: {
           marginBottom: 10,
         },
-        tabBarButton: (props) => (
+        tabBarButton: (props: any) => (
           <Pressable
             {...props}
             onPress={(e) => {

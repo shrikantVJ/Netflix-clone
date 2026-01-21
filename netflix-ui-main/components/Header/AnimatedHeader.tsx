@@ -14,6 +14,7 @@ import { Image as ExpoImage } from 'expo-image';
 
 import { styles } from '@/styles';
 import { CategoriesListModal } from '../CategoriesListModal/CategoriesListModal';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -27,6 +28,7 @@ export function AnimatedHeader({ headerAnimatedProps, title, scrollDirection }: 
     const [showCategories, setShowCategories] = useState(false);
     const insets = useSafeAreaInsets();
     const router = useRouter();
+    const { colorScheme, toggleTheme } = useTheme();
 
     const onCategoryPress = () => {
         Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -81,40 +83,47 @@ export function AnimatedHeader({ headerAnimatedProps, title, scrollDirection }: 
         <>
             <Animated.View style={[styles.header]}>
                 <AnimatedBlurView
-                    tint="systemThickMaterialDark"
+                    tint={colorScheme === 'dark' ? "systemThickMaterialDark" : "systemThickMaterialLight"}
                     style={[styles.blurContainer, { paddingTop: insets.top }]}
                     animatedProps={headerAnimatedProps}
                 >
                     <Animated.View style={[styles.headerTitleContainer, headerTitleStyle]}>
-                        <Text style={styles.headerTitle}>{title}</Text>
+                        <Text style={[styles.headerTitle, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{title}</Text>
 
                         <View style={styles.headerButtons}>
+                            <Pressable style={styles.searchButton} onPress={toggleTheme}>
+                                <Ionicons
+                                    name={colorScheme === 'dark' ? "sunny-outline" : "moon-outline"}
+                                    size={24}
+                                    color={colorScheme === 'dark' ? "#fff" : "#000"}
+                                />
+                            </Pressable>
                             <Pressable style={styles.searchButton} onPress={() => router.push('/downloads')}>
                                 <ExpoImage
                                     source={require('../../assets/images/replace-these/download-netflix-transparent.png')}
-                                    style={{ width: 28, height: 28 }}
+                                    style={{ width: 28, height: 28, tintColor: colorScheme === 'dark' ? '#fff' : '#000' }}
                                     cachePolicy="memory-disk"
                                     contentFit="contain"
                                 />
                             </Pressable>
                             <Pressable style={styles.searchButton} onPress={() => router.push('/search')}>
-                                <Ionicons name="search-outline" size={28} color="#fff" />
+                                <Ionicons name="search-outline" size={28} color={colorScheme === 'dark' ? "#fff" : "#000"} />
                             </Pressable>
                         </View>
                     </Animated.View>
                     <Animated.View style={[styles.categoryTabs, tabsAnimatedStyle]}>
                         <Pressable style={styles.categoryTab}>
-                            <Text style={styles.categoryTabText}>TV Shows</Text>
+                            <Text style={[styles.categoryTabText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>TV Shows</Text>
                         </Pressable>
                         <Pressable style={styles.categoryTab}>
-                            <Text style={styles.categoryTabText}>Movies</Text>
+                            <Text style={[styles.categoryTabText, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>Movies</Text>
                         </Pressable>
                         <Pressable
                             style={styles.categoryTab}
                             onPress={onCategoryPress}
                         >
-                            <Text style={styles.categoryTabTextWithIcon}>Categories</Text>
-                            <Ionicons name="chevron-down" size={16} color="#fff" />
+                            <Text style={[styles.categoryTabTextWithIcon, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>Categories</Text>
+                            <Ionicons name="chevron-down" size={16} color={colorScheme === 'dark' ? "#fff" : "#000"} />
                         </Pressable>
                     </Animated.View>
                 </AnimatedBlurView>

@@ -8,14 +8,14 @@ import Animated, {
     runOnJS
 } from 'react-native-reanimated';
 import { usePathname, useNavigation } from 'expo-router';
+import { useTheme } from '@/contexts/ThemeContext';
 
 interface Props {
-    children: React.ReactNode;
     isActive: boolean;
     slideDirection: 'left' | 'right';
 }
 
-export function TabScreenWrapper({ children, isActive, slideDirection }: Props) {
+export function TabScreenWrapper({ children, isActive, slideDirection }: React.PropsWithChildren<Props>) {
     const [hasInitialized, setHasInitialized] = useState(false);
 
     // Simplified logic: Always render the wrapper to prevent re-mounting
@@ -60,13 +60,15 @@ export function TabScreenWrapper({ children, isActive, slideDirection }: Props) 
     }));
 
     // Always return the same structure
+    const { colorScheme } = useTheme();
+
     return (
-        <View style={{ flex: 1, backgroundColor: '#000' }}>
+        <View style={{ flex: 1, backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }}>
             <Animated.View style={[{
                 position: 'absolute',
                 width: '100%',
                 height: '100%',
-                backgroundColor: '#000',
+                backgroundColor: colorScheme === 'dark' ? '#000' : '#fff',
             }, animatedStyle]}>
                 {children}
             </Animated.View>

@@ -12,7 +12,8 @@ import { useRouter } from 'expo-router';
 import { BlurView } from 'expo-blur';
 import { WhoIsWatching } from '@/components/WhoIsWatching';
 import { UserProvider } from '@/contexts/UserContext';
-import { useUser } from '@/contexts/UserContext';
+import { UserProvider as InternalUserProvider, useUser } from '@/contexts/UserContext';
+import { ThemeProvider as AppThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import { Image } from 'expo-image';
 import useCachedResources from '@/hooks/useCachedResources';
 import { useVisionOS } from '@/hooks/useVisionOS';
@@ -73,7 +74,7 @@ function AnimatedStack() {
                 />
             )}
             <Animated.View style={[styles.stackContainer, animatedStyle]}>
-                <Stack>
+                <Stack screenOptions={{ headerShown: false }}>
                     <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
                     <Stack.Screen
                         name="movie/[id]"
@@ -171,13 +172,22 @@ export default function RootLayout() {
         ]);
     }, []);
 
+    return (
+        <AppThemeProvider>
+            <RootContent isLoaded={isLoaded} />
+        </AppThemeProvider>
+    );
+}
+
+function RootContent({ isLoaded }: { isLoaded: boolean }) {
+    const { colorScheme } = useTheme();
+
     if (!isLoaded) {
-        return null; // Early return after all hooks are called
+        return null;
     }
 
-
     return (
-        <UserProvider>
+        <InternalUserProvider>
             <GestureHandlerRootView style={styles.container}>
                 <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
                     <RootScaleProvider>
@@ -187,7 +197,7 @@ export default function RootLayout() {
                     </RootScaleProvider>
                 </ThemeProvider>
             </GestureHandlerRootView>
-        </UserProvider>
+        </InternalUserProvider>
     );
 }
 const styles = StyleSheet.create({

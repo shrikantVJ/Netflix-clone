@@ -6,9 +6,13 @@ import { usePathname, useRouter } from 'expo-router';
 import { TAB_SCREENS } from '@/app/(tabs)/_layout';
 import { Ionicons } from '@expo/vector-icons';
 
+import { useTheme } from '@/contexts/ThemeContext';
+import { StatusBar } from 'expo-status-bar';
+
 export default function DownloadsScreen() {
     const pathname = usePathname();
     const router = useRouter();
+    const { colorScheme } = useTheme();
     const currentTabIndex = TAB_SCREENS.findIndex(screen =>
         screen.name === '(profile)/profile'
     );
@@ -21,13 +25,14 @@ export default function DownloadsScreen() {
 
     return (
         <TabScreenWrapper isActive={isActive} slideDirection={slideDirection} >
-            <SafeAreaView style={styles.container}>
+            <SafeAreaView style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+                <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
-                        <Ionicons name="arrow-back" size={24} color="white" />
+                        <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? "white" : "black"} />
                     </TouchableOpacity>
                     <View style={styles.headerTitleContainer}>
-                        <Text style={styles.title}>Downloads</Text>
+                        <Text style={[styles.title, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>Downloads</Text>
                     </View>
                 </View>
 
@@ -35,18 +40,22 @@ export default function DownloadsScreen() {
                     contentContainerStyle={styles.content}
                     showsVerticalScrollIndicator={false}
                 >
-                    <View style={styles.iconContainer}>
-                        <Ionicons name="arrow-down" size={70} color="#6e6e6e" />
+                    <View style={[styles.iconContainer, {
+                        backgroundColor: colorScheme === 'dark' ? '#1a1a1a' : '#f0f0f0',
+                        borderWidth: 1,
+                        borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.05)'
+                    }]}>
+                        <Ionicons name="arrow-down" size={70} color={colorScheme === 'dark' ? "#6e6e6e" : "#999"} />
                     </View>
 
-                    <Text style={styles.heading}>Never be without Netflix</Text>
+                    <Text style={[styles.heading, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>Never be without Netflix</Text>
 
-                    <Text style={styles.description}>
+                    <Text style={[styles.description, { color: colorScheme === 'dark' ? '#999' : '#666' }]}>
                         Download shows and movies so you'll never be without something to watch — even when you're offline.
                     </Text>
 
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>See What You Can Download</Text>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: colorScheme === 'dark' ? '#fff' : '#000' }]}>
+                        <Text style={[styles.buttonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>See What You Can Download</Text>
                     </TouchableOpacity>
                 </ScrollView>
             </SafeAreaView>

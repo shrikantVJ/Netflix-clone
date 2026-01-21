@@ -18,6 +18,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TAB_SCREENS } from '@/app/(tabs)/_layout';
 import { TabScreenWrapper } from '@/components/TabScreenWrapper';
 import { usePathname } from 'expo-router';
+import { useTheme } from '@/contexts/ThemeContext';
 import COMING_SOON_DATA from '@/data/new.json';
 import { useRef } from 'react';
 import { useScrollToTop } from '@react-navigation/native';
@@ -75,6 +76,7 @@ export default function NewScreen() {
 
     const router = useRouter();
     const insets = useSafeAreaInsets();
+    const { colorScheme, toggleTheme } = useTheme();
     const scrollY = useSharedValue(0);
     const [activeTab, setActiveTab] = React.useState('coming-soon');
 
@@ -154,11 +156,10 @@ export default function NewScreen() {
                 </View>
 
                 <View style={newStyles.actionButtons}>
-                    <Pressable style={newStyles.actionButton}>
-                        <Ionicons name="notifications-outline" size={20} color="#000" />
-                        <Text style={newStyles.actionButtonText}>Remind Me</Text>
+                    <Pressable style={[newStyles.actionButton, { backgroundColor: colorScheme === 'dark' ? '#fff' : '#000' }]}>
+                        <Ionicons name="notifications-outline" size={20} color={colorScheme === 'dark' ? '#000' : '#fff'} />
+                        <Text style={[newStyles.actionButtonText, { color: colorScheme === 'dark' ? '#000' : '#fff' }]}>Remind Me</Text>
                     </Pressable>
-
                 </View>
             </View>
         </View>
@@ -186,24 +187,30 @@ export default function NewScreen() {
 
     return (
         <TabScreenWrapper isActive={isActive} slideDirection={slideDirection}>
-            <View style={newStyles.container}>
-                <StatusBar style="light" />
-                <SafeAreaView>
-                    <View style={[newStyles.header]}>
+            <View style={[newStyles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+                <StatusBar style={colorScheme === 'dark' ? "light" : "dark"} />
+                <SafeAreaView style={{ flex: 1 }}>
+                    <View style={[newStyles.header, { backgroundColor: colorScheme === 'dark' ? 'rgba(0,0,0,0.8)' : 'rgba(255,255,255,0.8)' }]}>
                         <View style={newStyles.headerContent}>
-                            <Text style={newStyles.headerTitle}>New & Hot</Text>
+                            <Text style={[newStyles.headerTitle, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>New & Hot</Text>
                             <View style={newStyles.headerRight}>
+                                <Pressable onPress={toggleTheme}>
+                                    <Ionicons
+                                        name={colorScheme === 'dark' ? "sunny-outline" : "moon-outline"}
+                                        size={24}
+                                        color={colorScheme === 'dark' ? "#fff" : "#000"}
+                                    />
+                                </Pressable>
                                 <Pressable onPress={() => router.push('/downloads')}>
-                                    {/* Replace this with actual Netflix download icon, I am using this placeholder for now */}
                                     <ExpoImage
                                         source={require('../../assets/images/replace-these/download-netflix-icon.png')}
-                                        style={{ width: 24, height: 24 }}
+                                        style={{ width: 24, height: 24, tintColor: colorScheme === 'dark' ? '#fff' : '#000' }}
                                         cachePolicy="memory-disk"
                                         contentFit="contain"
                                     />
                                 </Pressable>
                                 <Pressable onPress={() => router.push('/search')}>
-                                    <Ionicons name="search" size={24} color="#fff" />
+                                    <Ionicons name="search" size={24} color={colorScheme === 'dark' ? "#fff" : "#000"} />
                                 </Pressable>
                             </View>
                         </View>
@@ -220,20 +227,8 @@ export default function NewScreen() {
                     <ScrollView
                         ref={scrollViewRef}
                         showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{ paddingBottom: 100 }}
                     >
-                        {/* 
-
-                        <View style={newStyles.activeTabContainer}>
-
-                            <Image
-                                source={{ uri: TAB_OPTIONS[0].icon }}
-                                style={newStyles.activeTabIcon}
-                            />
-                            <Text style={newStyles.activeTabTitle}>Coming Soon</Text>
-                        </View> */}
-
-
-
                         <View style={newStyles.comingSoonList}>
                             {COMING_SOON_DATA.events.map(renderComingSoonItem)}
                         </View>

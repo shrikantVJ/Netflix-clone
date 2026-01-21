@@ -3,9 +3,9 @@ import { View, Text, Pressable, Image, FlatList } from 'react-native';
 import { useRouter } from 'expo-router';
 import { styles } from '@/styles';
 import { Movie, MovieRow } from '@/types/movie';
-import Svg, { Path } from 'react-native-svg';
 import { useVisionOS } from '@/hooks/useVisionOS';
 import { HoverableView } from '@/components/ui/VisionContainer';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const NumberBackground = ({ number }: { number: number }) => {
     const num = (number).toString().padStart(2, '0');
@@ -22,11 +22,12 @@ const NumberBackground = ({ number }: { number: number }) => {
     );
 };
 
-const MovieItem = ({ item, router, index, isTop10 }: {
+const MovieItem = ({ item, router, index, isTop10, colorScheme }: {
     item: Movie;
     router: any;
     index: number;
     isTop10: boolean;
+    colorScheme: 'light' | 'dark';
 }) => (
     <Pressable
         onPress={() => router.push({
@@ -43,7 +44,11 @@ const MovieItem = ({ item, router, index, isTop10 }: {
             source={{ uri: item.imageUrl }}
             style={[
                 styles.thumbnail,
-                isTop10 && styles.top10Thumbnail
+                isTop10 && styles.top10Thumbnail,
+                {
+                    borderWidth: 1,
+                    borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.3)' : 'rgba(0, 0, 0, 0.2)'
+                }
             ]}
         />
     </Pressable>
@@ -53,21 +58,23 @@ export function MovieList({ rowTitle, movies, type }: MovieRow) {
     const router = useRouter();
     const isTop10 = type === 'top_10';
     const { isVisionOS } = useVisionOS();
+    const { colorScheme } = useTheme();
 
-    const renderItem = ({ item, index }) => (
-        <HoverableView key={`${item.id}-${index}`}>
+    const renderItem = ({ item, index }: { item: Movie; index: number }) => (
+        <HoverableView key={`${item.id}-${index}`} style={{}}>
             <MovieItem
                 item={item}
                 router={router}
                 index={index}
                 isTop10={isTop10}
+                colorScheme={colorScheme}
             />
         </HoverableView>
     );
 
     return (
-        <View style={isVisionOS ? styles.visionContainer : styles.container}>
-            <Text style={styles.sectionTitle}>{rowTitle}</Text>
+        <View style={styles.movieRow}>
+            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{rowTitle}</Text>
             <FlatList
                 horizontal
                 data={movies}
@@ -81,4 +88,4 @@ export function MovieList({ rowTitle, movies, type }: MovieRow) {
             />
         </View>
     );
-} 
+}

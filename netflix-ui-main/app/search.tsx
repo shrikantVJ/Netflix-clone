@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import moviesData from '../data/movies.json';
 import { useDebounce } from 'use-debounce';
+import { useTheme } from '@/contexts/ThemeContext';
 
 const { width } = Dimensions.get('window');
 const GAME_CARD_WIDTH = width / 3 - 16;
@@ -31,6 +32,7 @@ export default function Search() {
     const [debouncedSearchTerm] = useDebounce(searchQuery, 500);
     const inputRef = useRef<TextInput>(null);
     const router = useRouter();
+    const { colorScheme } = useTheme();
 
     useEffect(() => {
         if (debouncedSearchTerm !== searchQuery) {
@@ -69,36 +71,36 @@ export default function Search() {
     );
 
     return (
-        <View style={styles.container}>
-            <StatusBar style="light" />
+        <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <Stack.Screen options={{ headerShown: false }} />
 
             <View style={styles.header}>
                 <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                    <Ionicons name="chevron-back" size={24} color="white" />
+                    <Ionicons name="chevron-back" size={24} color={colorScheme === 'dark' ? "white" : "black"} />
                 </TouchableOpacity>
-                <View style={styles.searchInputContainer}>
-                    <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+                <View style={[styles.searchInputContainer, { backgroundColor: colorScheme === 'dark' ? '#323232' : 'rgba(0,0,0,0.05)' }]}>
+                    <Ionicons name="search" size={20} color={colorScheme === 'dark' ? "#666" : "#999"} style={styles.searchIcon} />
                     <TextInput
                         ref={inputRef}
-                        style={styles.searchInput}
+                        style={[styles.searchInput, { color: colorScheme === 'dark' ? 'white' : 'black' }]}
                         placeholder="Search games, shows, movies..."
-                        placeholderTextColor="#6b6b6b"
+                        placeholderTextColor={colorScheme === 'dark' ? "#6b6b6b" : "#999"}
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                         autoCapitalize="none"
                     />
                     {searchQuery.length > 0 && (
                         <TouchableOpacity onPress={() => setSearchQuery('')}>
-                            <Ionicons name="close-circle" size={20} color="#666" />
+                            <Ionicons name="close-circle" size={20} color={colorScheme === 'dark' ? "#666" : "#999"} />
                         </TouchableOpacity>
                     )}
                 </View>
             </View>
 
             {isLoading ? (
-                <View style={styles.loaderContainer}>
-                    <ActivityIndicator size="large" color="#fff" />
+                <View style={[styles.loaderContainer, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+                    <ActivityIndicator size="large" color={colorScheme === 'dark' ? "#fff" : "#000"} />
                 </View>
             ) : searchQuery.trim() !== '' && filteredGames.length === 0 && filteredShows.length === 0 ? (
                 <NoResultsView />
@@ -107,7 +109,7 @@ export default function Search() {
                     {/* Mobile Games Section - only show if there are games */}
                     {filteredGames.length > 0 && (
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
+                            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>
                                 {searchQuery.trim() ? 'Top Results - Games' : 'Recommended Mobile Games'}
                             </Text>
                             <ScrollView
@@ -123,9 +125,15 @@ export default function Search() {
                                     >
                                         <Image
                                             source={{ uri: game.imageUrl }}
-                                            style={styles.gameImage}
+                                            style={[
+                                                styles.gameImage,
+                                                {
+                                                    borderWidth: 1,
+                                                    borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'
+                                                }
+                                            ]}
                                         />
-                                        <Text style={styles.gameTitle} numberOfLines={2}>
+                                        <Text style={[styles.gameTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]} numberOfLines={2}>
                                             {game.title}
                                         </Text>
                                         <Text style={styles.gameType}>
@@ -140,7 +148,7 @@ export default function Search() {
                     {/* TV Shows & Movies Section - only show if there are shows */}
                     {filteredShows.length > 0 && (
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>
+                            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>
                                 {searchQuery.trim() ? 'Top Results - Shows & Movies' : 'Recommended TV Shows & Movies'}
                             </Text>
                             <View style={styles.showsList}>
@@ -152,13 +160,19 @@ export default function Search() {
                                     >
                                         <Image
                                             source={{ uri: item.imageUrl }}
-                                            style={styles.showImage}
+                                            style={[
+                                                styles.showImage,
+                                                {
+                                                    borderWidth: 1,
+                                                    borderColor: colorScheme === 'dark' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)'
+                                                }
+                                            ]}
                                         />
                                         <View style={styles.showInfo}>
-                                            <Text style={styles.showTitle}>{item.title}</Text>
+                                            <Text style={[styles.showTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>{item.title}</Text>
                                         </View>
                                         <TouchableOpacity style={styles.playButton}>
-                                            <Ionicons name="play-circle-outline" size={32} color="white" />
+                                            <Ionicons name="play-circle-outline" size={32} color={colorScheme === 'dark' ? "white" : "black"} />
                                         </TouchableOpacity>
                                     </TouchableOpacity>
                                 ))}

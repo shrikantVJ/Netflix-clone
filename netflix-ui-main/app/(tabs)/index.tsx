@@ -25,6 +25,7 @@ import { GameList } from '@/components/GameList/GameList';
 import { useScrollToTop } from '@react-navigation/native';
 import { useVisionOS } from '@/hooks/useVisionOS';
 import { VisionContainer, HoverableView } from '@/components/ui/VisionContainer';
+import { useTheme } from '@/contexts/ThemeContext';
 
 // const FEATURED_MOVIE = {
 //   id: 'dont-move',
@@ -113,6 +114,7 @@ export default function HomeScreen() {
 
   const pathname = usePathname();
   const isActive = pathname === '/' || pathname === '/index';
+  const { colorScheme } = useTheme();
 
   const currentTabIndex = TAB_SCREENS.findIndex(screen =>
     screen.name === 'index'
@@ -129,8 +131,8 @@ export default function HomeScreen() {
 
   return (
     <TabScreenWrapper isActive={isActive} slideDirection={slideDirection}>
-      <VisionContainer style={styles.container}>
-        <StatusBar style="light" />
+      <VisionContainer style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+        <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <AnimatedHeader
           headerAnimatedProps={headerAnimatedProps}
           title="Netflix"
@@ -150,7 +152,7 @@ export default function HomeScreen() {
           bounces={false}
         >
           <LinearGradient
-            colors={['#202036', '#11111d', '#07070c']}
+            colors={colorScheme === 'dark' ? ['#202036', '#11111d', '#07070c'] : ['#f0f0f0', '#ffffff', '#ffffff']}
             locations={[0, 0.4, 0.8]}
             style={[styles.gradient, { height: SCREEN_HEIGHT * 0.8 }]}
           />
