@@ -26,6 +26,7 @@ import { useScrollToTop } from '@react-navigation/native';
 import { useVisionOS } from '@/hooks/useVisionOS';
 import { VisionContainer, HoverableView } from '@/components/ui/VisionContainer';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LiquidMetal } from '@/components/LiquidMetal/LiquidMetal';
 
 // const FEATURED_MOVIE = {
 //   id: 'dont-move',
@@ -131,7 +132,7 @@ export default function HomeScreen() {
 
   return (
     <TabScreenWrapper isActive={isActive} slideDirection={slideDirection}>
-      <VisionContainer style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+      <VisionContainer style={[styles.container, { backgroundColor: 'transparent' }]}>
         <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
         <AnimatedHeader
           headerAnimatedProps={headerAnimatedProps}
@@ -151,11 +152,6 @@ export default function HomeScreen() {
           showsVerticalScrollIndicator={false}
           bounces={false}
         >
-          <LinearGradient
-            colors={colorScheme === 'dark' ? ['#202036', '#11111d', '#07070c'] : ['#f0f0f0', '#ffffff', '#ffffff']}
-            locations={[0, 0.4, 0.8]}
-            style={[styles.gradient, { height: SCREEN_HEIGHT * 0.8 }]}
-          />
 
           <FeaturedContent
             movie={FEATURED_MOVIE}

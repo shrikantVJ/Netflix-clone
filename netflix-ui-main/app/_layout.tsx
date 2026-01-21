@@ -19,6 +19,7 @@ import useCachedResources from '@/hooks/useCachedResources';
 import { useVisionOS } from '@/hooks/useVisionOS';
 
 import { FlashScreen } from '@/components/FlashScreen';
+import { LiquidMetal } from '@/components/LiquidMetal/LiquidMetal';
 
 function AnimatedStack() {
     const { scale } = useRootScale();
@@ -61,6 +62,7 @@ function AnimatedStack() {
             styles.container,
             isVisionOS && { backgroundColor: 'transparent' }
         ]}>
+            <LiquidMetal intensity="subtle" speed={5000} />
 
 
             {(isModalActive && canBlur) && (

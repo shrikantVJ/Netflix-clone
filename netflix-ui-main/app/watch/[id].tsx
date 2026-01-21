@@ -8,6 +8,8 @@ import { StatusBar } from 'expo-status-bar';
 import { useTheme } from '@/contexts/ThemeContext';
 
 import { BlurView } from 'expo-blur';
+import { LiquidMetal } from '@/components/LiquidMetal/LiquidMetal';
+import { LiquidMetalText } from '@/components/LiquidMetal/LiquidMetalText';
 
 const { width } = Dimensions.get('window');
 
@@ -41,7 +43,7 @@ export default function WatchScreen() {
     ];
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+        <View style={[styles.container, { backgroundColor: 'transparent' }]}>
             <StatusBar style={colorScheme === 'dark' ? "light" : "dark"} />
 
 
@@ -66,7 +68,14 @@ export default function WatchScreen() {
                 {/* Content Info */}
                 <View style={styles.infoSection}>
                     {/* Title and Meta */}
-                    <Text style={styles.title}>{content.title}</Text>
+                    <View style={styles.titleContainer}>
+                        <LiquidMetalText
+                            text={content.title}
+                            style={[styles.title, { fontSize: 36, textAlign: 'center' }]}
+                            intensity="strong"
+                            speed={3500}
+                        />
+                    </View>
                     <View style={styles.metadata}>
                         <Text style={styles.matchScore}>{content.match}</Text>
                         <Text style={styles.metadataText}>{content.year}</Text>
@@ -263,7 +272,11 @@ const styles = StyleSheet.create({
         height: 100,
     },
     infoSection: {
-        padding: 16,
+        padding: 20,
+    },
+    titleContainer: {
+        alignItems: 'center',
+        marginBottom: 10,
     },
     title: {
         color: '#fff',

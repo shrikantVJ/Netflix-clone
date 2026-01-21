@@ -7,6 +7,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { BlurView } from 'expo-blur';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LiquidMetal } from '@/components/LiquidMetal/LiquidMetal';
+import { LiquidMetalText } from '@/components/LiquidMetal/LiquidMetalText';
 
 const { width } = Dimensions.get('window');
 
@@ -37,7 +39,7 @@ export default function PlayScreen() {
     };
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+        <View style={[styles.container, { backgroundColor: 'transparent' }]}>
             <StatusBar style={colorScheme === 'dark' ? "light" : "dark"} />
 
 
@@ -56,7 +58,12 @@ export default function PlayScreen() {
 
                 {/* Game Info */}
                 <View style={styles.infoSection}>
-                    <Text style={styles.gameTitle}>{game.title}</Text>
+                    <LiquidMetalText
+                        text={game.title}
+                        style={[styles.gameTitle, { fontSize: 32 }]}
+                        intensity="strong"
+                        speed={3500}
+                    />
                     <Text style={styles.gameSubtitle}>{game.subtitle}</Text>
 
                     <View style={styles.metadata}>

@@ -4,9 +4,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { TabScreenWrapper } from '@/components/TabScreenWrapper';
 import { usePathname, useRouter } from 'expo-router';
 import { TAB_SCREENS } from '@/app/(tabs)/_layout';
+import { Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 
 import { useTheme } from '@/contexts/ThemeContext';
+import { LiquidMetal } from '@/components/LiquidMetal/LiquidMetal';
+import { LiquidMetalText } from '@/components/LiquidMetal/LiquidMetalText';
 import { StatusBar } from 'expo-status-bar';
 
 export default function DownloadsScreen() {
@@ -25,14 +28,18 @@ export default function DownloadsScreen() {
 
     return (
         <TabScreenWrapper isActive={isActive} slideDirection={slideDirection} >
-            <SafeAreaView style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+            <SafeAreaView style={[styles.container, { backgroundColor: 'transparent' }]}>
                 <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
                 <View style={styles.header}>
                     <TouchableOpacity style={styles.backButton} onPress={() => router.back()}>
                         <Ionicons name="arrow-back" size={24} color={colorScheme === 'dark' ? "white" : "black"} />
                     </TouchableOpacity>
                     <View style={styles.headerTitleContainer}>
-                        <Text style={[styles.title, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>Downloads</Text>
+                        <LiquidMetalText
+                            text="Downloads"
+                            style={styles.title}
+                            intensity="medium"
+                        />
                     </View>
                 </View>
 

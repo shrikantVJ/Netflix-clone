@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 
 export const FlashScreen = () => {
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: 'transparent' }]}>
             <Image
                 source={require('../assets/splash_custom.png')}
                 style={styles.image}

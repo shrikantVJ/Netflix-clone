@@ -6,6 +6,7 @@ import { Movie, MovieRow } from '@/types/movie';
 import { useVisionOS } from '@/hooks/useVisionOS';
 import { HoverableView } from '@/components/ui/VisionContainer';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LiquidMetalText } from '../LiquidMetal/LiquidMetalText';
 
 const NumberBackground = ({ number }: { number: number }) => {
     const num = (number).toString().padStart(2, '0');
@@ -74,7 +75,13 @@ export function MovieList({ rowTitle, movies, type }: MovieRow) {
 
     return (
         <View style={styles.movieRow}>
-            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{rowTitle}</Text>
+            <View style={{ marginBottom: 10, marginLeft: 20 }}>
+                <LiquidMetalText
+                    text={rowTitle}
+                    style={styles.sectionTitle}
+                    intensity="medium"
+                />
+            </View>
             <FlatList
                 horizontal
                 data={movies}

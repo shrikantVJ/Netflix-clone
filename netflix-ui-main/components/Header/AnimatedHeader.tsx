@@ -15,6 +15,7 @@ import { Image as ExpoImage } from 'expo-image';
 import { styles } from '@/styles';
 import { CategoriesListModal } from '../CategoriesListModal/CategoriesListModal';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LiquidMetalText } from '../LiquidMetal/LiquidMetalText';
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView);
 
@@ -88,8 +89,12 @@ export function AnimatedHeader({ headerAnimatedProps, title, scrollDirection }: 
                     animatedProps={headerAnimatedProps}
                 >
                     <Animated.View style={[styles.headerTitleContainer, headerTitleStyle]}>
-                        <Text style={[styles.headerTitle, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{title}</Text>
-
+                        <LiquidMetalText
+                            text={title}
+                            style={styles.headerTitle}
+                            intensity="strong"
+                            speed={3000}
+                        />
                         <View style={styles.headerButtons}>
                             <Pressable style={styles.searchButton} onPress={toggleTheme}>
                                 <Ionicons

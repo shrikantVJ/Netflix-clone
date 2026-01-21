@@ -16,6 +16,8 @@ import { StatusBar } from 'expo-status-bar';
 import moviesData from '../data/movies.json';
 import { useDebounce } from 'use-debounce';
 import { useTheme } from '@/contexts/ThemeContext';
+import { LiquidMetal } from '@/components/LiquidMetal/LiquidMetal';
+import { LiquidMetalText } from '@/components/LiquidMetal/LiquidMetalText';
 
 const { width } = Dimensions.get('window');
 const GAME_CARD_WIDTH = width / 3 - 16;
@@ -71,7 +73,7 @@ export default function Search() {
     );
 
     return (
-        <View style={[styles.container, { backgroundColor: colorScheme === 'dark' ? '#000' : '#fff' }]}>
+        <View style={[styles.container, { backgroundColor: 'transparent' }]}>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
             <Stack.Screen options={{ headerShown: false }} />
 
@@ -109,9 +111,13 @@ export default function Search() {
                     {/* Mobile Games Section - only show if there are games */}
                     {filteredGames.length > 0 && (
                         <View style={styles.section}>
-                            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>
-                                {searchQuery.trim() ? 'Top Results - Games' : 'Recommended Mobile Games'}
-                            </Text>
+                            <View style={{ marginBottom: 10 }}>
+                                <LiquidMetalText
+                                    text={searchQuery.trim() ? 'Top Results - Games' : 'Recommended Mobile Games'}
+                                    style={styles.sectionTitle}
+                                    intensity="medium"
+                                />
+                            </View>
                             <ScrollView
                                 horizontal
                                 showsHorizontalScrollIndicator={false}
@@ -148,9 +154,13 @@ export default function Search() {
                     {/* TV Shows & Movies Section - only show if there are shows */}
                     {filteredShows.length > 0 && (
                         <View style={styles.section}>
-                            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? 'white' : 'black' }]}>
-                                {searchQuery.trim() ? 'Top Results - Shows & Movies' : 'Recommended TV Shows & Movies'}
-                            </Text>
+                            <View style={{ marginBottom: 10 }}>
+                                <LiquidMetalText
+                                    text={searchQuery.trim() ? 'Top Results - Movies & TV' : 'Top TV Shows & Movies'}
+                                    style={styles.sectionTitle}
+                                    intensity="medium"
+                                />
+                            </View>
                             <View style={styles.showsList}>
                                 {filteredShows.map((item, index) => (
                                     <TouchableOpacity

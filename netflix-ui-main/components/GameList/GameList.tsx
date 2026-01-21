@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Pressable, Image, FlatList } from 'react-native';
+import { BlurView } from 'expo-blur';
+import { LiquidMetalText } from '../LiquidMetal/LiquidMetalText';
 import { useRouter } from 'expo-router';
 import { styles } from '@/styles';
 import { Movie, MovieRow } from '@/types/movie';
@@ -35,8 +37,14 @@ export function GameList({ rowTitle, movies }: MovieRow) {
     const { colorScheme } = useTheme();
 
     return (
-        <View style={styles.movieRow}>
-            <Text style={[styles.sectionTitle, { color: colorScheme === 'dark' ? '#fff' : '#000' }]}>{rowTitle}</Text>
+        <View style={styles.contentList}>
+            <View style={{ marginBottom: 10, marginLeft: 20 }}>
+                <LiquidMetalText
+                    text={rowTitle}
+                    style={styles.sectionTitle}
+                    intensity="medium"
+                />
+            </View>
             <FlatList
                 horizontal
                 data={movies}
