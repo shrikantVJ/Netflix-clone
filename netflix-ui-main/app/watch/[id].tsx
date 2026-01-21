@@ -45,9 +45,7 @@ export default function WatchScreen() {
                 <Pressable onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={28} color="#fff" />
                 </Pressable>
-                <View style={styles.headerInfo}>
-                    <Text style={styles.headerSubtitle}>S1:E1</Text>
-                </View>
+                <View style={{ flex: 1 }} />
                 <Pressable style={styles.iconButton}>
                     <Ionicons name="search" size={24} color="#fff" />
                 </Pressable>

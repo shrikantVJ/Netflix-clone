@@ -42,7 +42,7 @@ export default function PlayScreen() {
                 <Pressable onPress={() => router.back()} style={styles.backButton}>
                     <Ionicons name="arrow-back" size={28} color="#fff" />
                 </Pressable>
-                <Text style={styles.headerTitle}>Mobile Games</Text>
+                <View style={{ flex: 1 }} />
                 <Pressable style={styles.iconButton}>
                     <Ionicons name="search" size={24} color="#fff" />
                 </Pressable>
